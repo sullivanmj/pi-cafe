@@ -1,4 +1,4 @@
-from sys import exit
+import sys
 
 
 def main():
@@ -14,7 +14,7 @@ def init():
 
     """
     if __name__ == '__main__':
-        exit(main())
+        sys.exit(main())
 
 
 init()
