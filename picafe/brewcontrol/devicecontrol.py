@@ -1,5 +1,8 @@
 import pywemo
 
+STATE_OFF = 0
+STATE_ON = 1
+
 
 def get_devices():
     all_devices = []
@@ -23,9 +26,9 @@ class WemoDeviceWrapper:
         return self.pywemo_device.name
 
     def power_on(self):
-        if (self.pywemo_device.get_state() == 0):
+        if (self.pywemo_device.get_state() == STATE_OFF):
             self.pywemo_device.on()
 
     def power_off(self):
-        if (self.pywemo_device.get_state() == 1):
+        if (self.pywemo_device.get_state() == STATE_ON):
             self.pywemo_device.off()
