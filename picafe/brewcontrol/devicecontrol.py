@@ -12,6 +12,8 @@ def get_devices():
         pywemo_wrapper = wrap_wemo_device(pywemo_device)
         all_devices.append(pywemo_wrapper)
 
+    return all_devices
+
 
 def wrap_wemo_device(pywemo_device):
     return WemoDeviceWrapper(pywemo_device)
