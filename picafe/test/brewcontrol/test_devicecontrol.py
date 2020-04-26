@@ -4,6 +4,24 @@ import pywemo
 from picafe.brewcontrol import devicecontrol
 
 
+def test_getdevices_wraps_each_pywemo_device_with_wemodevicewrapper():
+    # arrange
+    mock_wemo_device_1 = mock.Mock(pywemo.WeMoDevice)
+    mock_wemo_device_2 = mock.Mock(pywemo.WeMoDevice)
+    mock_wemo_device_3 = mock.Mock(pywemo.WeMoDevice)
+    mock_devices = [mock_wemo_device_1, mock_wemo_device_2, mock_wemo_device_3]
+    pywemo.discover_devices = mock.Mock(return_value=mock_devices)
+
+    # act
+    devices = devicecontrol.get_devices()
+
+    # assert
+    pywemo.discover_devices.assert_called_once()
+
+    assert all(device.pywemo_device in mock_devices for device in devices)
+    assert devices.__len__() == 3
+
+
 def test_wemodevicewrapper_gets_correct_name():
     # arrange
     mock_wemo_device = mock.Mock(pywemo.WeMoDevice)
