@@ -19,7 +19,7 @@ def test_getdevices_wraps_each_pywemo_device_with_wemodevicewrapper():
     pywemo.discover_devices.assert_called_once()
 
     assert all(device.pywemo_device in mock_devices for device in devices)
-    assert devices.__len__() == 3
+    assert devices.__len__() == mock_devices.__len__()
 
 
 def test_wemodevicewrapper_gets_correct_name():
