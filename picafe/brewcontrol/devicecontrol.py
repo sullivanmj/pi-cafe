@@ -5,14 +5,18 @@ STATE_ON = 1
 
 
 def get_devices():
-    all_devices = []
+    return get_wemo_devices()
+
+
+def get_wemo_devices():
+    devices = []
     pywemo_devices = pywemo.discover_devices()
 
     for pywemo_device in pywemo_devices:
         pywemo_wrapper = wrap_wemo_device(pywemo_device)
-        all_devices.append(pywemo_wrapper)
+        devices.append(pywemo_wrapper)
 
-    return all_devices
+    return devices
 
 
 def wrap_wemo_device(pywemo_device):
