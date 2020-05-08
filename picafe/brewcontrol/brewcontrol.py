@@ -12,7 +12,6 @@ class TimedBrewController:
         self.device_controller = device_controller
 
     def start_brew(self):
-        self.stop_time = datetime.now(timezone.utc) + self.duration
         self.device_controller.power_on()
         self.timer.start()
 
