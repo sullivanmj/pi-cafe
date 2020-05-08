@@ -1,5 +1,4 @@
-from datetime import datetime
-from datetime import timezone
+import datetime
 from threading import Timer
 
 STATE_STOPPED = 0
