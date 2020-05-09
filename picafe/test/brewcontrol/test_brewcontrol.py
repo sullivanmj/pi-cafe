@@ -12,7 +12,7 @@ from picafe.brewcontrol import PiCafeDevice
 def test_timedbrewcontroller_start_brew_starts_device():
     # arrange
     mock_device_controller = mock.Mock(PiCafeDevice)
-    duration = mock.Mock()
+    duration = datetime.timedelta(0)
     brew_controller = TimedBrewController(duration, mock_device_controller)
 
     # act
@@ -54,14 +54,17 @@ def test_timedbrewcontroller_powers_off_device():
 def test_timedbrewcontroller_cancel_stops_device():
     # arrange
     mock_device_controller = mock.Mock(PiCafeDevice)
-    duration = mock.Mock()
+    duration = datetime.timedelta(seconds=5)
     brew_controller = TimedBrewController(duration, mock_device_controller)
+    start_time = datetime.datetime.now()
 
     # act
     brew_controller.cancel_brew()
 
     # assert
     mock_device_controller.power_off.assert_called_once()
+    # ensure the test is valid
+    assert datetime.datetime.now() - duration < start_time
 
 
 def test_timedbrewcontroller_cancel_cancels_timer_early():
