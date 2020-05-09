@@ -23,7 +23,7 @@ class TimedBrewController:
 
 
 class TemperatureBrewController:
-    def __init__(self, fahrenheitTarget, device_controller):
+    def __init__(self, fahrenheitTarget: float, device_controller):
         self.fahrenheitTarget = fahrenheitTarget
         self.device_controller = device_controller
 

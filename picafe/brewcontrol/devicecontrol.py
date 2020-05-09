@@ -19,12 +19,12 @@ def get_wemo_devices():
     return devices
 
 
-def wrap_wemo_device(pywemo_device):
+def wrap_wemo_device(pywemo_device: pywemo.WeMoDevice):
     return WemoDeviceWrapper(pywemo_device)
 
 
 class WemoDeviceWrapper:
-    def __init__(self, pywemo_device):
+    def __init__(self, pywemo_device: pywemo.WeMoDevice):
         self.pywemo_device = pywemo_device
 
     @property
