@@ -76,4 +76,5 @@ def test_timedbrewcontroller_cancel_cancels_timer_early():
 
     # assert
     mock_device_controller.power_off.assert_called_once()
+    # ensure that the test is valid
     assert datetime.datetime.now() - time_before_cancel < duration
