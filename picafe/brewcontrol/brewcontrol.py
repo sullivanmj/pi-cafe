@@ -30,8 +30,8 @@ class TemperatureBrewController:
     def start_brew(self):
         self.device_controller.power_on()
 
-    def stop_brew(self):
-        pass
+    def __stop_brew(self):
+        self.device_controller.power_off()
 
     def cancel_brew(self):
         self.stop_brew()
