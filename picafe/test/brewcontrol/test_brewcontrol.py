@@ -35,14 +35,15 @@ def test_timedbrewcontroller_calls_stop_duration_after_specified_duration():
     mock_device_controller.power_off.assert_called_once()
 
 
-def test_timedbrewcontroller_stop_stops_device():
+def test_timedbrewcontroller_powers_off_device():
     # arrange
     mock_device_controller = mock.Mock()
-    duration = mock.Mock()
+    duration = datetime.timedelta(seconds=0.001)
     brew_controller = TimedBrewController(duration, mock_device_controller)
 
     # act
-    brew_controller.stop_brew()
+    brew_controller.start_brew()
+    time.sleep(0.02)
 
     # assert
     mock_device_controller.power_off.assert_called_once()
