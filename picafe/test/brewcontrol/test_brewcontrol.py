@@ -10,8 +10,8 @@ from picafe.brewcontrol import TimedBrewController
 def test_timedbrewcontroller_start_brew_starts_device():
     # arrange
     mock_device_controller = mock.Mock()
-    brew_controller = TimedBrewController(datetime.timedelta(),
-                                          mock_device_controller)
+    duration = mock.Mock()
+    brew_controller = TimedBrewController(duration, mock_device_controller)
 
     # act
     brew_controller.start_brew()
@@ -33,3 +33,44 @@ def test_timedbrewcontroller_calls_stop_duration_after_specified_duration():
     mock_device_controller.power_off.assert_not_called()
     time.sleep(0.02)
     mock_device_controller.power_off.assert_called_once()
+
+
+def test_timedbrewcontroller_stop_stops_device():
+    # arrange
+    mock_device_controller = mock.Mock()
+    duration = mock.Mock()
+    brew_controller = TimedBrewController(duration, mock_device_controller)
+
+    # act
+    brew_controller.stop_brew()
+
+    # assert
+    mock_device_controller.power_off.assert_called_once()
+
+
+def test_timedbrewcontroller_cancel_stops_device():
+    # arrange
+    mock_device_controller = mock.Mock()
+    duration = mock.Mock()
+    brew_controller = TimedBrewController(duration, mock_device_controller)
+
+    # act
+    brew_controller.cancel_brew()
+
+    # assert
+    mock_device_controller.power_off.assert_called_once()
+
+
+def test_timedbrewcontroller_cancel_cancels_timer_early():
+    # arrange
+    mock_device_controller = mock.Mock()
+    duration = datetime.timedelta(hours=5)
+    brew_controller = TimedBrewController(duration, mock_device_controller)
+    time_before_cancel = datetime.datetime.now()
+
+    # act
+    brew_controller.cancel_brew()
+
+    # assert
+    mock_device_controller.power_off.assert_called_once()
+    assert datetime.datetime.now() - time_before_cancel < duration
