@@ -1,4 +1,6 @@
 import datetime
+import picafe.brewcontrol
+
 from threading import Timer
 
 STATE_STOPPED = 0
@@ -6,7 +8,9 @@ STATE_BREWING = 1
 
 
 class TimedBrewController:
-    def __init__(self, duration: datetime.timedelta, device_controller):
+    def __init__(self,
+                 duration: datetime.timedelta,
+                 device_controller: picafe.brewcontrol.PiCafeDevice):
         self.timer = Timer(duration.total_seconds(), self.__stop_brew)
         self.device_controller = device_controller
 
@@ -23,7 +27,9 @@ class TimedBrewController:
 
 
 class TemperatureBrewController:
-    def __init__(self, fahrenheitTarget: float, device_controller):
+    def __init__(self,
+                 fahrenheitTarget: float,
+                 device_controller: picafe.brewcontrol.PiCafeDevice):
         self.fahrenheitTarget = fahrenheitTarget
         self.device_controller = device_controller
 

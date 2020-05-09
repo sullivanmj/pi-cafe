@@ -5,11 +5,12 @@ import threading
 import datetime
 import time
 from picafe.brewcontrol import TimedBrewController
+from picafe.brewcontrol import PiCafeDevice
 
 
 def test_timedbrewcontroller_start_brew_starts_device():
     # arrange
-    mock_device_controller = mock.Mock()
+    mock_device_controller = mock.Mock(PiCafeDevice)
     duration = mock.Mock()
     brew_controller = TimedBrewController(duration, mock_device_controller)
 
@@ -22,7 +23,7 @@ def test_timedbrewcontroller_start_brew_starts_device():
 
 def test_timedbrewcontroller_calls_stop_duration_after_specified_duration():
     # arrange
-    mock_device_controller = mock.Mock()
+    mock_device_controller = mock.Mock(PiCafeDevice)
     duration = datetime.timedelta(seconds=0.005)
     brew_controller = TimedBrewController(duration, mock_device_controller)
 
@@ -37,7 +38,7 @@ def test_timedbrewcontroller_calls_stop_duration_after_specified_duration():
 
 def test_timedbrewcontroller_powers_off_device():
     # arrange
-    mock_device_controller = mock.Mock()
+    mock_device_controller = mock.Mock(PiCafeDevice)
     duration = datetime.timedelta(seconds=0.001)
     brew_controller = TimedBrewController(duration, mock_device_controller)
 
@@ -51,7 +52,7 @@ def test_timedbrewcontroller_powers_off_device():
 
 def test_timedbrewcontroller_cancel_stops_device():
     # arrange
-    mock_device_controller = mock.Mock()
+    mock_device_controller = mock.Mock(PiCafeDevice)
     duration = mock.Mock()
     brew_controller = TimedBrewController(duration, mock_device_controller)
 
@@ -64,7 +65,7 @@ def test_timedbrewcontroller_cancel_stops_device():
 
 def test_timedbrewcontroller_cancel_cancels_timer_early():
     # arrange
-    mock_device_controller = mock.Mock()
+    mock_device_controller = mock.Mock(PiCafeDevice)
     duration = datetime.timedelta(hours=5)
     brew_controller = TimedBrewController(duration, mock_device_controller)
     time_before_cancel = datetime.datetime.now()

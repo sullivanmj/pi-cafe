@@ -1,3 +1,4 @@
+import abc
 import pywemo
 
 STATE_OFF = 0
@@ -6,6 +7,29 @@ STATE_ON = 1
 
 def get_devices():
     return get_wemo_devices()
+
+
+class PiCafeDevice(metaclass=abc.ABCMeta):
+    @classmethod
+    def __subclasshook__(cls, subclass):
+        return (hasattr(subclass, 'name')
+                and callable(subclass.load_data_source)
+                and hasattr(subclass, 'power_on')
+                and callable(subclass.extract_text)
+                and hasattr(subclass, 'power_off')
+                and callable(subclass.power_off))
+
+    @abc.abstractproperty
+    def name(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def power_on(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def power_off(self):
+        raise NotImplementedError
 
 
 def get_wemo_devices():
@@ -23,7 +47,7 @@ def wrap_wemo_device(pywemo_device: pywemo.WeMoDevice):
     return WemoDeviceWrapper(pywemo_device)
 
 
-class WemoDeviceWrapper:
+class WemoDeviceWrapper(PiCafeDevice):
     def __init__(self, pywemo_device: pywemo.WeMoDevice):
         self.pywemo_device = pywemo_device
 
