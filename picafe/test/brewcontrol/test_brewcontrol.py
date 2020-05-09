@@ -4,6 +4,7 @@ import pytest
 import threading
 import datetime
 import time
+
 from picafe.brewcontrol import TimedBrewController
 from picafe.brewcontrol import PiCafeDevice
 
@@ -66,7 +67,7 @@ def test_timedbrewcontroller_cancel_stops_device():
 def test_timedbrewcontroller_cancel_cancels_timer_early():
     # arrange
     mock_device_controller = mock.Mock(PiCafeDevice)
-    duration = datetime.timedelta(hours=5)
+    duration = datetime.timedelta(seconds=2)
     brew_controller = TimedBrewController(duration, mock_device_controller)
     time_before_cancel = datetime.datetime.now()
 

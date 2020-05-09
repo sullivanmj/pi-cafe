@@ -13,11 +13,12 @@ class PiCafeDevice(metaclass=abc.ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass):
         return (hasattr(subclass, 'name')
-                and callable(subclass.load_data_source)
+                and callable(subclass.name)
                 and hasattr(subclass, 'power_on')
-                and callable(subclass.extract_text)
+                and callable(subclass.power_on)
                 and hasattr(subclass, 'power_off')
-                and callable(subclass.power_off))
+                and callable(subclass.power_off)
+                or NotImplemented)
 
     @abc.abstractproperty
     def name(self):
