@@ -31,5 +31,5 @@ def test_timedbrewcontroller_calls_stop_duration_after_specified_duration():
 
     # assert
     mock_device_controller.power_off.assert_not_called()
-    time.sleep(0.01)
+    time.sleep(0.02)
     mock_device_controller.power_off.assert_called_once()
