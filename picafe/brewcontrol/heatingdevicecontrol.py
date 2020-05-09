@@ -11,7 +11,7 @@ def get_heating_devices() -> List[HeatingDevice]:
 
 class HeatingDevice(metaclass=abc.ABCMeta):
     @classmethod
-    def __subclasshook__(cls, subclass):
+    def __subclasshook__(cls, subclass) -> bool:
         return (hasattr(subclass, 'name')
                 and callable(subclass.name)
                 and hasattr(subclass, 'power_on')
@@ -21,15 +21,15 @@ class HeatingDevice(metaclass=abc.ABCMeta):
                 or NotImplemented)
 
     @abc.abstractproperty
-    def name(self):
+    def name(self) -> str:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def power_on(self):
+    def power_on(self) -> None:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def power_off(self):
+    def power_off(self) -> None:
         raise NotImplementedError
 
 
@@ -49,17 +49,17 @@ def wrap_wemo_device(pywemo_device: pywemo.WeMoDevice) -> WemoDeviceWrapper:
 
 
 class WemoDeviceWrapper(HeatingDevice):
-    def __init__(self, pywemo_device: pywemo.WeMoDevice):
+    def __init__(self, pywemo_device: pywemo.WeMoDevice) -> None:
         self.pywemo_device = pywemo_device
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.pywemo_device.name
 
-    def power_on(self):
+    def power_on(self) -> None:
         if (self.pywemo_device.get_state() == STATE_OFF):
             self.pywemo_device.on()
 
-    def power_off(self):
+    def power_off(self) -> None:
         if (self.pywemo_device.get_state() == STATE_ON):
             self.pywemo_device.off()
