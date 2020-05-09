@@ -7,7 +7,7 @@ STATE_BREWING = 1
 
 class TimedBrewController:
     def __init__(self, duration: datetime.timedelta, device_controller):
-        self.timer = Timer(duration.total_seconds, self.stop_brew)
+        self.timer = Timer(duration.total_seconds(), self.stop_brew)
         self.device_controller = device_controller
 
     def start_brew(self):
