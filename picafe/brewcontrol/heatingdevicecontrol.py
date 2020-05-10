@@ -1,12 +1,9 @@
 import abc
+from typing import List
 import pywemo
 
 STATE_OFF = 0
 STATE_ON = 1
-
-
-def get_heating_devices() -> List[HeatingDevice]:
-    return get_wemo_devices()
 
 
 class HeatingDevice(metaclass=abc.ABCMeta):
@@ -33,19 +30,8 @@ class HeatingDevice(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
-def get_wemo_devices() -> List[WemoDeviceWrapper]:
-    devices = []
-    pywemo_devices = pywemo.discover_devices()
-
-    for pywemo_device in pywemo_devices:
-        pywemo_wrapper = wrap_wemo_device(pywemo_device)
-        devices.append(pywemo_wrapper)
-
-    return devices
-
-
-def wrap_wemo_device(pywemo_device: pywemo.WeMoDevice) -> WemoDeviceWrapper:
-    return WemoDeviceWrapper(pywemo_device)
+def get_heating_devices() -> List[HeatingDevice]:
+    return get_wemo_devices()
 
 
 class WemoDeviceWrapper(HeatingDevice):
@@ -63,3 +49,18 @@ class WemoDeviceWrapper(HeatingDevice):
     def power_off(self) -> None:
         if (self.pywemo_device.get_state() == STATE_ON):
             self.pywemo_device.off()
+
+
+def wrap_wemo_device(pywemo_device: pywemo.WeMoDevice) -> WemoDeviceWrapper:
+    return WemoDeviceWrapper(pywemo_device)
+
+
+def get_wemo_devices() -> List[WemoDeviceWrapper]:
+    devices = []
+    pywemo_devices = pywemo.discover_devices()
+
+    for pywemo_device in pywemo_devices:
+        pywemo_wrapper = wrap_wemo_device(pywemo_device)
+        devices.append(pywemo_wrapper)
+
+    return devices

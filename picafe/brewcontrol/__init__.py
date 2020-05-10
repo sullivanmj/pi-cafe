@@ -1,4 +1,4 @@
-from .devicecontrol import get_devices
-from .devicecontrol import PiCafeDevice
-from .devicecontrol import WemoDeviceWrapper
+from .heatingdevicecontrol import get_heating_devices
+from .heatingdevicecontrol import HeatingDevice
+from .heatingdevicecontrol import WemoDeviceWrapper
 from .brewcontrol import TimedBrewController
