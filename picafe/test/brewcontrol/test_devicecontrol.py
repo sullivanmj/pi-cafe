@@ -56,7 +56,8 @@ def test_wemodevicewrapper_turn_on_does_nothing_when_on():
     mock_wemo_device = mock.Mock(pywemo.WeMoDevice)
     on_func = mock.Mock()
     mock_wemo_device.on = on_func
-    mock_wemo_device.get_state = mock.Mock(return_value=heatingdevicecontrol.STATE_ON)
+    mock_wemo_device.get_state = mock.Mock(
+        return_value=heatingdevicecontrol.STATE_ON)
     wemo_wrapper = heatingdevicecontrol.WemoDeviceWrapper(mock_wemo_device)
 
     # act
@@ -71,7 +72,8 @@ def test_wemodevicewrapper_turn_off_turns_off_device_when_on():
     mock_wemo_device = mock.Mock(pywemo.WeMoDevice)
     off_func = mock.Mock()
     mock_wemo_device.off = off_func
-    mock_wemo_device.get_state = mock.Mock(return_value=heatingdevicecontrol.STATE_ON)
+    mock_wemo_device.get_state = mock.Mock(
+        return_value=heatingdevicecontrol.STATE_ON)
     wemo_wrapper = heatingdevicecontrol.WemoDeviceWrapper(mock_wemo_device)
 
     # act
