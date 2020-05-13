@@ -33,9 +33,11 @@ class ManualBrewController(BrewController):
         self.device_controller = device_controller
 
     def start_brew(self) -> None:
+        print('Starting manual brew cycle.')
         self.device_controller.power_on()
 
     def stop_brew(self) -> None:
+        print('Stopping manual brew cycle.')
         self.device_controller.power_off()
 
     def cancel_brew(self) -> None:
