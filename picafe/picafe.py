@@ -1,6 +1,8 @@
 """The main script entry-point for pi-cafe."""
 
 import sys
+import typing
+
 import picafe.brewcontrol.heatingdevicecontrol as heatingdevicecontrol
 import picafe.brewcontrol.brewcontrol
 
@@ -45,7 +47,7 @@ def select_heating_device() -> heatingdevicecontrol.HeatingDevice:
 
 
 def prompt_user_to_select_device(
-    devices: List[heatingdevicecontrol.HeatingDevice]) \
+    devices: typing.List[heatingdevicecontrol.HeatingDevice]) \
         -> heatingdevicecontrol.HeatingDevice:
     """Prompt the user to select from a list of devices.
 
