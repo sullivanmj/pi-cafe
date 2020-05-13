@@ -5,79 +5,98 @@ import threading
 import datetime
 import time
 
+from picafe.brewcontrol import ManualBrewController
 from picafe.brewcontrol import TimedBrewController
 from picafe.brewcontrol import HeatingDevice
 
 
-def test_timedbrewcontroller_start_brew_starts_device():
-    # arrange
-    mock_device_controller = mock.Mock(HeatingDevice)
-    duration = datetime.timedelta(0)
-    brew_controller = TimedBrewController(duration, mock_device_controller)
+class TestTimedBrewController:
+    def test_start_brew_starts_device(self):
+        # arrange
+        mock_device_controller = mock.Mock(HeatingDevice)
+        duration = datetime.timedelta(0)
+        brew_controller = TimedBrewController(duration, mock_device_controller)
 
-    # act
-    brew_controller.start_brew()
+        # act
+        brew_controller.start_brew()
 
-    # assert
-    mock_device_controller.power_on.assert_called_once()
+        # assert
+        mock_device_controller.power_on.assert_called_once()
 
+    def test_device_is_not_stopped_before_specified_duration(self):
+        # arrange
+        mock_device_controller = mock.Mock(HeatingDevice)
+        duration = datetime.timedelta(seconds=0.005)
+        brew_controller = TimedBrewController(duration, mock_device_controller)
 
-def test_timedbrewcontroller_calls_stop_duration_after_specified_duration():
-    # arrange
-    mock_device_controller = mock.Mock(HeatingDevice)
-    duration = datetime.timedelta(seconds=0.005)
-    brew_controller = TimedBrewController(duration, mock_device_controller)
+        # act
+        brew_controller.start_brew()
 
-    # act
-    brew_controller.start_brew()
+        # assert
+        mock_device_controller.power_off.assert_not_called()
+        time.sleep(0.02)
+        mock_device_controller.power_off.assert_called_once()
 
-    # assert
-    mock_device_controller.power_off.assert_not_called()
-    time.sleep(0.02)
-    mock_device_controller.power_off.assert_called_once()
+    def test_device_is_stopped_after_specified_duration(self):
+        # arrange
+        mock_device_controller = mock.Mock(HeatingDevice)
+        duration = datetime.timedelta(seconds=0.001)
+        brew_controller = TimedBrewController(duration, mock_device_controller)
 
+        # act
+        brew_controller.start_brew()
+        time.sleep(0.02)
 
-def test_timedbrewcontroller_powers_off_device():
-    # arrange
-    mock_device_controller = mock.Mock(HeatingDevice)
-    duration = datetime.timedelta(seconds=0.001)
-    brew_controller = TimedBrewController(duration, mock_device_controller)
+        # assert
+        mock_device_controller.power_off.assert_called_once()
 
-    # act
-    brew_controller.start_brew()
-    time.sleep(0.02)
+    def test_cancel_stops_device(self):
+        # arrange
+        mock_device_controller = mock.Mock(HeatingDevice)
+        duration = datetime.timedelta(seconds=5)
+        brew_controller = TimedBrewController(duration, mock_device_controller)
+        start_time = datetime.datetime.now()
 
-    # assert
-    mock_device_controller.power_off.assert_called_once()
+        # act
+        brew_controller.cancel_brew()
 
-
-def test_timedbrewcontroller_cancel_stops_device():
-    # arrange
-    mock_device_controller = mock.Mock(HeatingDevice)
-    duration = datetime.timedelta(seconds=5)
-    brew_controller = TimedBrewController(duration, mock_device_controller)
-    start_time = datetime.datetime.now()
-
-    # act
-    brew_controller.cancel_brew()
-
-    # assert
-    mock_device_controller.power_off.assert_called_once()
-    # ensure the test is valid
-    assert datetime.datetime.now() - duration < start_time
+        # assert
+        mock_device_controller.power_off.assert_called_once()
+        # ensure the test is valid
+        assert datetime.datetime.now() - duration < start_time
 
 
-def test_timedbrewcontroller_cancel_cancels_timer_early():
-    # arrange
-    mock_device_controller = mock.Mock(HeatingDevice)
-    duration = datetime.timedelta(seconds=2)
-    brew_controller = TimedBrewController(duration, mock_device_controller)
-    time_before_cancel = datetime.datetime.now()
+class TestManualBrewController:
+    def test_start_starts_device(self):
+        # arrange
+        mock_device_controller = mock.Mock(HeatingDevice)
+        duration = datetime.timedelta(0)
+        brew_controller = ManualBrewController(mock_device_controller)
 
-    # act
-    brew_controller.cancel_brew()
+        # act
+        brew_controller.start_brew()
 
-    # assert
-    mock_device_controller.power_off.assert_called_once()
-    # ensure that the test is valid
-    assert datetime.datetime.now() - time_before_cancel < duration
+        # assert
+        mock_device_controller.power_on.assert_called_once()
+
+    def test_cancel_stops_device(self):
+        # arrange
+        mock_device_controller = mock.Mock(HeatingDevice)
+        brew_controller = ManualBrewController(mock_device_controller)
+
+        # act
+        brew_controller.cancel_brew()
+
+        # assert
+        mock_device_controller.power_off.assert_called_once()
+
+    def test_stop_stops_device(self):
+        # arrange
+        mock_device_controller = mock.Mock(HeatingDevice)
+        brew_controller = ManualBrewController(mock_device_controller)
+
+        # act
+        brew_controller.stop_brew()
+
+        # assert
+        mock_device_controller.power_off.assert_called_once()
