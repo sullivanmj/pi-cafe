@@ -1,7 +1,7 @@
 import mock
 import pytest
 import pywemo
-from picafe.brewcontrol import heatingdevicecontrol
+from picafe.brewing import heatingdevicecontrol
 
 
 def test_getdevices_wraps_each_pywemo_device_with_wemodevicewrapper():

@@ -5,9 +5,9 @@ import threading
 import datetime
 import time
 
-from picafe.brewcontrol import ManualBrewController
-from picafe.brewcontrol import TimedBrewController
-from picafe.brewcontrol import HeatingDevice
+from picafe.brewing import ManualBrewController
+from picafe.brewing import TimedBrewController
+from picafe.brewing import HeatingDevice
 
 
 class TestTimedBrewController:

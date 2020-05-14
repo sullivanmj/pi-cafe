@@ -1,6 +1,6 @@
 import abc
 import datetime
-import picafe.brewcontrol
+import picafe.brewing
 
 from .heatingdevicecontrol import HeatingDevice
 

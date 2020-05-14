@@ -3,9 +3,9 @@
 import sys
 import typing
 
-from picafe.brewcontrol.heatingdevicecontrol import HeatingDevice
-from picafe.brewcontrol.heatingdevicecontrol import get_heating_devices
-from picafe.brewcontrol.brewcontrol import ManualBrewController
+from picafe.brewing.heatingdevicecontrol import HeatingDevice
+from picafe.brewing.heatingdevicecontrol import get_heating_devices
+from picafe.brewing.brewcontrol import ManualBrewController
 
 
 COLUMN_SEPARATOR = ' | '
