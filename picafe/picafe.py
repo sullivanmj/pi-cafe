@@ -3,8 +3,14 @@
 import sys
 import typing
 
-import picafe.brewcontrol.heatingdevicecontrol as heatingdevicecontrol
-import picafe.brewcontrol.brewcontrol
+from picafe.brewcontrol.heatingdevicecontrol import HeatingDevice
+from picafe.brewcontrol.heatingdevicecontrol import get_heating_devices
+from picafe.brewcontrol.brewcontrol import ManualBrewController
+
+
+COLUMN_SEPARATOR = ' | '
+FIRST_COLUMN_TITLE = 'index'
+SECOND_COLUMN_TITLE = 'description'
 
 
 def main():
@@ -16,9 +22,13 @@ def main():
     """
     print('Welcome to Pi Cafe.')
 
-    selected_device = select_heating_device()
-    brew_controller = picafe.brewcontrol.brewcontrol.ManualBrewController(
-        selected_device)
+    try:
+        selected_device = select_heating_device()
+    except CanceledDeviceSelection:
+        print('Please come again. Goodbye.')
+        return
+
+    brew_controller = ManualBrewController(selected_device)
 
     brew_controller.start_brew()
 
@@ -29,33 +39,62 @@ def main():
     print('Brew cycle complete.')
     print('Enjoy your beverage.')
 
-def select_heating_device() -> heatingdevicecontrol.HeatingDevice:
+
+def select_heating_device() -> HeatingDevice:
     """Select a heating device.
 
     If there is only one heating device detected, then that device will
     be selected. If there is more than one device, then the user will
     be prompted to select the desired device.
     """
-    devices = heatingdevicecontrol.get_heating_devices()
+    devices = get_heating_devices()
 
-    if devices.count() == 0:
+    if len(devices) == 0:
         return None
-    elif devices.count() == 1:
+    elif len(devices) == 1:
         return devices[0]
     else:
-        return prompt_user_to_select_device(devices)
+        return get_valid_device_selection(devices)
 
 
-def prompt_user_to_select_device(
-    devices: typing.List[heatingdevicecontrol.HeatingDevice]) \
-        -> heatingdevicecontrol.HeatingDevice:
+def get_valid_device_selection(devices: typing.List[HeatingDevice]) -> int:
+    """
+
+    """
+    while True:
+        try:
+            return prompt_for_device_selection(devices)
+        except InvalidDeviceSelectionError:
+            print(f'''Please enter a device identifer between 0 and
+                      {len(devices) - 1}''')
+
+
+def prompt_for_device_selection(devices: typing.List[HeatingDevice]) -> int:
     """Prompt the user to select from a list of devices.
 
     The user can select a device by entering the index presented next
     to the device, or they can cancel by electing to not enter an
     index.
     """
-    pass
+
+    print(f'{FIRST_COLUMN_TITLE}{COLUMN_SEPARATOR}{SECOND_COLUMN_TITLE}')
+
+    for index in range(len(devices)):
+        print_device_with_index(index, devices[index])
+
+    print()
+
+    prompt = f'Please enter your selection (0 through {len(devices) - 1}: '
+    return input(prompt)
+
+
+def print_device_with_index(index: int, device: HeatingDevice) -> None:
+    index_string = repr(index)
+    index_string_length = len(index_string)
+    desired_string_length = len(FIRST_COLUMN_TITLE) + len(COLUMN_SEPARATOR)
+    index_string_padding = ' ' * (desired_string_length - index_string_length)
+
+    print(f'{index_string}{index_string_padding}{device}')
 
 
 def initialize_application():
@@ -72,5 +111,9 @@ def initialize_application():
 initialize_application()
 
 
-class NoDeviceSelectedError(Exception):
+class InvalidDeviceSelectionError(Exception):
+    pass
+
+
+class CanceledDeviceSelection(Exception):
     pass
