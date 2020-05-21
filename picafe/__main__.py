@@ -30,6 +30,8 @@ def main():
 
     brew_controller = ManualBrewController(selected_device)
 
+    input('Press ENTER to start brewing.')
+
     brew_controller.start_brew()
 
     input('Press ENTER to stop brewing.')
@@ -47,6 +49,8 @@ def select_heating_device() -> HeatingDevice:
     be selected. If there is more than one device, then the user will
     be prompted to select the desired device.
     """
+    print('Fetching Heating devices...')
+
     devices = get_heating_devices()
 
     if len(devices) == 0:
