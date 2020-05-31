@@ -27,6 +27,10 @@ def main():
     except CanceledDeviceSelection:
         print('Please come again. Goodbye.')
         return
+    except NoDevicesDetectedError:
+        print('No devices were detected. Please ensure that a device is '
+              'available.')
+        return
 
     brew_controller = ManualBrewController(selected_device)
 
@@ -54,23 +58,27 @@ def select_heating_device() -> HeatingDevice:
     devices = get_heating_devices()
 
     if len(devices) == 0:
-        return None
+        raise NoDevicesDetectedError
     elif len(devices) == 1:
         return devices[0]
     else:
         return get_valid_device_selection(devices)
 
 
-def get_valid_device_selection(devices: typing.List[HeatingDevice]) -> int:
+def get_valid_device_selection(
+        devices: typing.List[HeatingDevice])-> HeatingDevice:
     """
 
     """
     while True:
         try:
-            return prompt_for_device_selection(devices)
+            selected_index = prompt_for_device_selection(devices)
+            break
         except InvalidDeviceSelectionError:
-            print(f'''Please enter a device identifer between 0 and
+            print(f'''Please enter a device identifier between 0 and
                       {len(devices) - 1}''')
+
+    return devices[selected_index]
 
 
 def prompt_for_device_selection(devices: typing.List[HeatingDevice]) -> int:
@@ -88,8 +96,20 @@ def prompt_for_device_selection(devices: typing.List[HeatingDevice]) -> int:
 
     print()
 
-    prompt = f'Please enter your selection (0 through {len(devices) - 1}: '
-    return input(prompt)
+    device_count = len(devices)
+
+    prompt = f'Please enter your selection (0 through {device_count - 1}): '
+    selection = input(prompt)
+
+    try:
+        int_selection = int(selection)
+    except ValueError:
+        raise InvalidDeviceSelectionError
+
+    if int_selection < 0 or int_selection >= device_count:
+        raise InvalidDeviceSelectionError
+
+    return int_selection
 
 
 def print_device_with_index(index: int, device: HeatingDevice) -> None:
@@ -116,6 +136,10 @@ initialize_application()
 
 
 class InvalidDeviceSelectionError(Exception):
+    pass
+
+
+class NoDevicesDetectedError(Exception):
     pass
 
 
